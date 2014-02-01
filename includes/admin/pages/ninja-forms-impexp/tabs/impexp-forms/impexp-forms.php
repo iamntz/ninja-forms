@@ -89,7 +89,7 @@ function ninja_forms_register_exp_forms_metabox(){
 function ninja_forms_serialize_form( $form_id ){
 	if($form_id == '')
 		return;
-	$plugin_settings = get_option( 'ninja_forms_settings' );
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	$form_row = ninja_forms_get_form_by_id($form_id);
 	$field_results = ninja_forms_get_fields_by_form_id($form_id);
 	$form_row['id'] = NULL;
@@ -112,7 +112,7 @@ function ninja_forms_serialize_form( $form_id ){
 function ninja_forms_export_form( $form_id ){
 	if($form_id == '')
 		return;
-	$plugin_settings = get_option( 'ninja_forms_settings' );
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	$form_row = ninja_forms_get_form_by_id($form_id);
 	$data = $form_row['data'];
 	$form_title = $data['form_title'];
@@ -140,7 +140,7 @@ function ninja_forms_export_form( $form_id ){
 
 function ninja_forms_save_impexp_forms($data){
 	global $wpdb, $ninja_forms_admin_update_message;
-	$plugin_settings = get_option("ninja_forms_settings");
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	$form_id = isset( $_REQUEST['form_id'] ) ? absint( $_REQUEST['form_id'] ) : '';
 	$update_msg = '';
 	if( $_REQUEST['submit'] == __('Export Form', 'ninja-forms') OR ( isset( $_REQUEST['export_form'] ) AND absint( $_REQUEST['export_form'] ) == 1 ) ){

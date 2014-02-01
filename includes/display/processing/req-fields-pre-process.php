@@ -36,7 +36,7 @@ function ninja_forms_req_fields_process(){
 					$label_pos = '';
 				}
 					// Get the required field symbol.
-				$settings = get_option( 'ninja_forms_settings' );
+				$settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 				if ( isset ( $settings['req_field_symbol'] ) ) {
 					$req_symbol = $settings['req_field_symbol'];
 				} else {
@@ -58,7 +58,7 @@ function ninja_forms_req_fields_process(){
 				$reg_type = $ninja_forms_fields[$field_type];
 				$req_validation = $reg_type['req_validation'];
 
-				$plugin_settings = get_option("ninja_forms_settings");
+				$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 				$req_field_error = $plugin_settings['req_field_error'];
 				if( isset( $plugin_settings['req_error_label'] ) ){
 					$req_error_label = __( $plugin_settings['req_error_label'], 'ninja-forms' );

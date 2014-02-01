@@ -1,14 +1,14 @@
 <?php
 add_action( 'wp_ajax_ninja_forms_save_metabox_state', 'ninja_forms_save_metabox_state' );
 function ninja_forms_save_metabox_state(){
-	$plugin_settings = get_option( 'ninja_forms_settings' );
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	$page = esc_html( $_REQUEST['page'] );
 	$tab = esc_html( $_REQUEST['tab'] );
 	$slug = esc_html( $_REQUEST['slug'] );
 	$state = esc_html( $_REQUEST['state'] );
 	$plugin_settings['metabox_state'][$page][$tab][$slug] = $state;
 	update_option( 'ninja_forms_settings', $plugin_settings );
-	//$plugin_settings = get_option( 'ninja_forms_settings' );
+	//$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	//echo "SETTING: ".$plugin_settings['metabox_state'][$page][$tab][$slug];
 	die();
 }
@@ -312,7 +312,7 @@ function ninja_forms_remove_def(){
 
 add_action( 'wp_ajax_ninja_forms_side_sortable', 'ninja_forms_side_sortable' );
 function ninja_forms_side_sortable(){
-	$plugin_settings = get_option( 'ninja_forms_settings' );
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	$page = esc_html( $_REQUEST['page'] );
 	$tab = esc_html( $_REQUEST['tab'] );
 	$order = ninja_forms_esc_html_deep( $_REQUEST['order'] );
@@ -327,7 +327,7 @@ add_action('wp_ajax_ninja_forms_view_sub', 'ninja_forms_view_sub');
 function ninja_forms_view_sub(){
 	global $ninja_forms_fields;
 	/*
-	$plugin_settings = get_option("ninja_forms_settings");
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	if(isset($plugin_settings['date_format'])){
 		$date_format = $plugin_settings['date_format'];
 	}else{

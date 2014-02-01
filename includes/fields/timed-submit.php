@@ -95,7 +95,7 @@ function ninja_forms_field_timed_submit_display($field_id, $data){
 function ninja_forms_field_timed_submit_pre_process( $field_id, $user_value ){
 	global $ninja_forms_processing;
 
-	$plugin_settings = get_option( 'ninja_forms_settings' );
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	if ( isset ( $plugin_settings['timed_submit_error'] ) ) {
 		$timed_submit_error = __( $plugin_settings['timed_submit_error'], 'ninja-forms' );
 	} else {

@@ -2,7 +2,7 @@
 
 function ninja_forms_inside_label_hidden( $field_id, $data ){
 	if( isset( $data['label_pos'] ) AND $data['label_pos'] == 'inside' ){
-		$plugin_settings = get_option( 'ninja_forms_settings' );
+		$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 
 		if( isset( $data['label'] ) ){
 			$label = $data['label'];

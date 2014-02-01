@@ -13,7 +13,7 @@ function ninja_forms_register_tab_view_subs(){
 
 function ninja_forms_tab_view_subs(){
 	global $ninja_forms_fields;
-	$plugin_settings = get_option( 'ninja_forms_settings' );
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 
 	if( isset( $plugin_settings['date_format'] ) AND $plugin_settings['date_format'] != '' ){
 		$date_format = $plugin_settings['date_format'];
@@ -566,7 +566,7 @@ function ninja_forms_edit_sub_save_values(){
 
 function ninja_forms_save_view_subs( $form_id, $data = array() ){
 	global $ninja_forms_admin_update_message;
-	$plugin_settings = get_option("ninja_forms_settings");
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	if( isset( $_POST['submit'] ) AND $_REQUEST['page'] == 'ninja-forms-subs' ){
 		switch( $_POST['submit'] ){
 			case __( 'Apply', 'ninja-forms' ):

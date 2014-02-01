@@ -1,12 +1,12 @@
 <?php
 function ninja_forms_output_tab_metabox($form_id = '', $slug, $metabox){
-	$plugin_settings = get_option( 'ninja_forms_settings' );
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	if($form_id != ''){
 		$form_row = ninja_forms_get_form_by_id($form_id);
 		$current_settings = $form_row['data'];
 	}else{
 		$form_id = '';
-		$current_settings = get_option("ninja_forms_settings");
+		$current_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	}
 
 	$page = $metabox['page'];

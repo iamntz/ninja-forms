@@ -63,6 +63,7 @@ define("NINJA_FORMS_SUBS_TABLE_NAME", $wpdb->prefix . "ninja_forms_subs");
 define("NINJA_FORMS_JS_DEBUG", true);
 
 /* Require Core Files */
+require_once( NINJA_FORMS_DIR . "/includes/ninja-settings.php" );
 require_once( NINJA_FORMS_DIR . "/includes/database.php" );
 require_once( NINJA_FORMS_DIR . "/includes/activation.php" );
 require_once( NINJA_FORMS_DIR . "/includes/register.php" );
@@ -331,7 +332,7 @@ function ninja_forms_load_lang() {
 add_action('plugins_loaded', 'ninja_forms_load_lang');
 
 function ninja_forms_update_version_number(){
-	$plugin_settings = get_option( 'ninja_forms_settings' );
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 
 	if ( !isset ( $plugin_settings['version'] ) OR ( NINJA_FORMS_VERSION != $plugin_settings['version'] ) ) {
 		$plugin_settings['version'] = NINJA_FORMS_VERSION;

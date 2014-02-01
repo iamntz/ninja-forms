@@ -7,7 +7,7 @@
 function ninja_forms_display_field_label( $field_id, $data ){
 	global $ninja_forms_fields, $ninja_forms_loading, $ninja_forms_processing;
 
-	$plugin_settings = get_option("ninja_forms_settings");
+	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 
 	if ( isset ( $ninja_forms_loading ) ) {
 		$field_row = $ninja_forms_loading->get_field_settings( $field_id );
@@ -99,7 +99,7 @@ function ninja_forms_display_label_inside( $data, $field_id ){
 	}
 
 	// Get the required field symbol.
-	$settings = get_option( 'ninja_forms_settings' );
+	$settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
 	if ( isset ( $settings['req_field_symbol'] ) ) {
 		$req_symbol = $settings['req_field_symbol'];
 	} else {
