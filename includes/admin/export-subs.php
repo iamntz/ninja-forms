@@ -12,7 +12,7 @@ function ninja_forms_subs_bulk_export(){
 
 function ninja_forms_export_subs_to_csv( $sub_ids = '', $return = false ){
 	global $ninja_forms_fields, $ninja_forms_processing;
-	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
+	$plugin_settings = apply_filters( "ninja_forms_settings", nf_get_settings() );
 	if(isset($plugin_settings['date_format'])){
 		$date_format = $plugin_settings['date_format'];
 	}else{

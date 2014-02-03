@@ -84,7 +84,7 @@ function ninja_forms_ajax_spinner_settings( $form_id, $data ){
 }
 
 function ninja_forms_save_ajax_settings($data){
-	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
+	$plugin_settings = apply_filters( "ninja_forms_settings", nf_get_settings() );
 	foreach($data as $key => $val){
 		$plugin_settings[$key] = $val;
 	}

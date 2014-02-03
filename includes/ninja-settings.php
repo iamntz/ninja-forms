@@ -1,6 +1,6 @@
 <?php
 
-function get_ninja_settings(){
+function nf_get_settings(){
   $settings = apply_filters( "ninja_forms_settings", get_option( "ninja_forms_settings" ) );
 
   $settings['date_format']           = apply_filters( 'ninja_forms_labels/date_format'           , $settings['date_format'] );
@@ -33,4 +33,4 @@ function get_ninja_settings(){
   $settings['register_spam_error']   = apply_filters( 'ninja_forms_labels/register_spam_error'   , $settings['register_spam_error'] );
 
   return $settings;
-} // get_ninja_settings
+} // nf_get_settings

@@ -103,7 +103,7 @@ function ninja_forms_register_field_textbox(){
 add_action( 'init', 'ninja_forms_register_field_textbox' );
 
 function ninja_forms_field_text_edit( $field_id, $data ){
-	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
+	$plugin_settings = apply_filters( "ninja_forms_settings", nf_get_settings() );
 
 	if( isset( $plugin_settings['currency_symbol'] ) ){
 		$currency_symbol = $plugin_settings['currency_symbol'];
@@ -268,7 +268,7 @@ function ninja_forms_field_text_display( $field_id, $data ){
 
 function ninja_forms_field_text_pre_process( $field_id, $user_value ){
 	global $ninja_forms_processing;
-	$plugin_settings = apply_filters( "ninja_forms_settings", get_ninja_settings() );
+	$plugin_settings = apply_filters( "ninja_forms_settings", nf_get_settings() );
 	if( isset( $plugin_settings['invalid_email'] ) ){
 		$invalid_email = __( $plugin_settings['invalid_email'], 'ninja-forms' );
 	}else{
