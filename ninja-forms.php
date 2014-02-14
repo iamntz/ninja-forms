@@ -281,6 +281,7 @@ require_once( NINJA_FORMS_DIR . "/includes/fields/tax.php" );
 require_once( NINJA_FORMS_DIR . "/includes/fields/credit-card.php" );
 require_once( NINJA_FORMS_DIR . "/includes/fields/number.php" );
 
+require_once( NINJA_FORMS_DIR . "/includes/fields/fieldset.php" );
 /*
 require_once( NINJA_FORMS_DIR . "/includes/fields/post-title.php" );
 require_once( NINJA_FORMS_DIR . "/includes/fields/post-content.php" );

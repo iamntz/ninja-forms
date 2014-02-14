@@ -129,7 +129,7 @@ class Ninja_Forms_Processing {
 
 		// If we have fields in our $_POST object, then loop through the $_POST'd field values and add them to our global variable.
 		if ( isset ( $_POST['_ninja_forms_display_submit'] ) OR isset ( $_POST['_ninja_forms_edit_sub'] ) ) {
-			$field_results = ninja_forms_get_fields_by_form_id($form_ID);
+			$field_results = ninja_forms_get_fields_by_form_id($form_ID, 'default_order', -1);
 			//$field_results = apply_filters('ninja_forms_display_fields_array', $field_results, $form_ID);
 
 			foreach( $field_results as $field ) {

@@ -31,6 +31,7 @@ function ninja_forms_tab_field_settings(){
 	if($form_id != ''){
 		?>
 		<input type="hidden" name="_ninja_forms_field_order" id="ninja_forms_field_order" value="">
+		<input type="hidden" name="_ninja_forms_field_nested_order" id="ninja_forms_field_nested_order" value="">
 		<?php
 		do_action( 'ninja_forms_edit_field_before_ul', $form_id );
 		do_action( 'ninja_forms_edit_field_ul', $form_id );
@@ -41,15 +42,29 @@ function ninja_forms_tab_field_settings(){
 function ninja_forms_save_field_settings($form_id, $data){
 	global $wpdb, $ninja_forms_fields, $ninja_forms_admin_update_message;
 
-	$order = esc_html( $_POST['_ninja_forms_field_order'] );
+	$order_tree = array();
+	$order_array = array();
 
-	$order = str_replace("ninja_forms_field_", "", $order);
-	$order = explode(',', $order);
+	$order = isset( $_POST['_ninja_forms_field_nested_order'] ) ? esc_html( $_POST['_ninja_forms_field_nested_order'] ) : false;
+
+	if( !$order ){
+		$order = esc_html( $_POST['_ninja_forms_field_order'] );
+		$order = str_replace("ninja_forms_field_", "", $order);
+		$order = explode(',', $order);
+	}else {
+		$order = str_replace( 'ninja_forms_field', '', $order );
+		$order = explode( '&amp;', $order );
+	}
+
 	if(is_array($order)){
-		$order_array = array();
 		$x = 0;
 		foreach($order as $id){
-			$order_array[$id] = $x;
+			$id = explode( '=', $id );
+			$id[0] = preg_replace( "/[^0-9]/", '', $id[0] );
+
+			$order_array[ $id[0] ] = $x;
+			$order_tree[ $id[0] ]  = isset( $id[1] ) ? $id[1] : null;
+
 			$x++;
 		}
 	}
@@ -81,7 +96,12 @@ function ninja_forms_save_field_settings($form_id, $data){
 			foreach( $vals as $k => $v ){
 				$field_data[$k] = $v;
 			}
-			$data_array = array('data' => serialize( $field_data ), 'order' => $order);
+
+			$data_array = array(
+				'data' => serialize( $field_data ),
+				'order' => $order,
+				'parent' => isset( $order_tree[$field_id] ) ? $order_tree[$field_id] : 0
+			);
 			$wpdb->update( NINJA_FORMS_FIELDS_TABLE_NAME, $data_array, array( 'id' => $field_id ));
 		}
 		$date_updated = date( 'Y-m-d H:i:s', strtotime ( 'now' ) );
