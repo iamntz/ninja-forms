@@ -15,6 +15,7 @@ function ninja_forms_edit_field_output_li( $field_id ) {
 	$plugin_settings = nf_get_settings();
 	
 	if ( isset( $ninja_forms_fields[$field_type]['use_li'] ) and $ninja_forms_fields[$field_type]['use_li'] ) {
+		$field_class = array();
 
 		if ( isset( $field_row['fav_id'] ) and $field_row['fav_id'] != 0 ) {
 			$fav_id = $field_row['fav_id'];
@@ -52,13 +53,13 @@ function ninja_forms_edit_field_output_li( $field_id ) {
 			$edit_options = $reg_field['edit_options'];
 
 			if ( $reg_field['nesting'] ) {
-				$nesting_class = 'ninja-forms-nest';
+				$field_class[] = 'ninja-forms-nest';
 			} else {
-				$nesting_class = 'ninja-forms-no-nest';
+				$field_class[] = 'ninja-forms-no-nest';
 			}
 			$conditional = $reg_field['conditional'];
 
-			$type_class = $field_type.'-li';
+			$field_class[] = $field_type . '-li';
 
 			if ( $def_id != 0 and $def_id != '' ) {
 				$def_row = ninja_forms_get_def_by_id( $def_id );
@@ -88,6 +89,8 @@ function ninja_forms_edit_field_output_li( $field_id ) {
 			$li_label = stripslashes( $li_label );
 			$li_label = ninja_forms_esc_html_deep( $li_label );
 
+			$field_class = apply_filters( 'ninja_forms_edit_field_li_class', $field_class );
+
 			if ( 
 			isset( $reg_field ) &&
 			isset( $reg_field['conditional'] ) &&
@@ -98,7 +101,7 @@ function ninja_forms_edit_field_output_li( $field_id ) {
 				$conditional_value_type = '';
 			}
 ?>
-			<li id="ninja_forms_field_<?php echo $field_id;?>" class="<?php echo $nesting_class;?> <?php echo $type_class;?>">
+			<li id="ninja_forms_field_<?php echo $field_id;?>" class="<?php echo join( ' ', $field_class );?>">
 				<input type="hidden" id="ninja_forms_field_<?php echo $field_id;?>_conditional_value_type" value="<?php echo $conditional_value_type;?>">
 				<input type="hidden" id="ninja_forms_field_<?php echo $field_id;?>_fav_id" name="" class="ninja-forms-field-fav-id" value="<?php echo $fav_id;?>">
 				<dl class="menu-item-bar">
