@@ -134,11 +134,11 @@ function ninja_forms_get_field_by_id($field_id){
 	}
 }
 
-function ninja_forms_get_fields_by_form_id($form_id, $orderby = 'default_order', $parent = 0){
+function ninja_forms_get_fields_by_form_id($form_id, $orderby = 'default_order', $parent = null){
 	global $wpdb;
 
 	$orderby = ( $orderby == 'default_order' ? 'ORDER BY `order` ASC' : $orderby );
-	$and_parent = $parent >= 0 ? sprintf( 'AND parent = %d', $parent ) : '';
+	$and_parent = !is_null( $parent ) ? sprintf( 'AND parent = %d', $parent ) : '';
 
 	$field_results = $wpdb->get_results($wpdb->prepare("SELECT * FROM ".NINJA_FORMS_FIELDS_TABLE_NAME." WHERE form_id = %d {$and_parent} ".$orderby, $form_id), ARRAY_A);
 	if(is_array($field_results) AND !empty($field_results)){

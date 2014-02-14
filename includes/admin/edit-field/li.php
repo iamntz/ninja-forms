@@ -44,7 +44,7 @@ function ninja_forms_edit_field_output_li( $field_id ) {
 		}
 
 		$form_id = $field_row['form_id'];
-		$field_results = ninja_forms_get_fields_by_form_id( $form_id );
+		// $field_results = ninja_forms_get_fields_by_form_id( $form_id, 'default_order', 0 );
 
 		if ( isset( $ninja_forms_fields[$field_type] ) ) {
 			$reg_field = $ninja_forms_fields[$field_type];
