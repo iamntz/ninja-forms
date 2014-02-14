@@ -215,12 +215,14 @@ jQuery(document).ready(function($) {
 	});
 
 
+
 	//Make the field list sortable
-	$(".ninja-forms-field-list").sortable({
-		handle: '.menu-item-handle',
-		items: "li:not(.not-sortable)",
-		connectWith: ".ninja-forms-field-list",
-		//cursorAt: {left: -10, top: -1},
+	$(".ninja-forms-field-list").nestedSortable({
+		handle             : '.menu-item-handle',
+		items              : "li:not(.not-sortable)",
+		connectWith        : ".ninja-forms-field-list",
+		disableNestingClass: 'ninja-forms-no-nest',
+		listType           : 'ul',
 		start: function(e, ui){
 			var wp_editor_count = $(ui.item).find(".wp-editor-wrap").length;
 			if(wp_editor_count > 0){
@@ -232,13 +234,6 @@ jQuery(document).ready(function($) {
 			}
 		},
 		stop: function(e,ui) {
-			/*
-			if( $(ui.item).prop("tagName") == "A" ){
-				//alert( $.data( document.body, 'test' ) );
-				var el = $( "li.ninja-forms-no-nest:last" ).clone();
-				$(ui.item).replaceWith(el);
-			}
-			*/
 			var wp_editor_count = $(ui.item).find(".wp-editor-wrap").length;
 			if(wp_editor_count > 0){
 				$(ui.item).find(".wp-editor-wrap").each(function(){
@@ -247,15 +242,19 @@ jQuery(document).ready(function($) {
 					tinyMCE.execCommand( 'mceAddControl', true, ed_id );
 				});
 			}
-			$(this).sortable("refresh");
+			$(this).nestedSortable("refresh");
 		}
 	});
+
 
 	//Save the sortable list as an array when the save button is pressed
 	$(".ninja-forms-save-data").click(function(event){
 		//event.preventDefault();
-		var order = $("#ninja_forms_field_list").sortable("toArray");
-		$("#ninja_forms_field_order").val(order);
+		// var order = $("#ninja_forms_field_list").sortable("toArray");
+		// $("#ninja_forms_field_order").val(order);
+
+		var order = $('#ninja_forms_field_list').nestedSortable('serialize');
+		$("#ninja_forms_field_nested_order").val( order );
 	});
 
 	//Add New Field

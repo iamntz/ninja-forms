@@ -119,7 +119,7 @@ class Ninja_Forms_Loading {
 	function setup_field_data() {
 		global $current_user, $post, $ninja_forms_fields;
 		$form_id = $this->data['form_ID'];
-		$field_results = ninja_forms_get_fields_by_form_id($form_id);
+		$field_results = ninja_forms_get_fields_by_form_id($form_id, 'default_order', -1);
 		//$field_results = apply_filters('ninja_forms_display_fields_array', $field_results, $form_id);
 
 		foreach( $field_results as $field ) {

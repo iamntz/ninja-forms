@@ -8,10 +8,10 @@ function ninja_forms_register_display_fields(){
 	add_action('ninja_forms_display_fields', 'ninja_forms_display_fields', 10, 2);
 }
 
-function ninja_forms_display_fields($form_id){
+function ninja_forms_display_fields( $form_id, $parent = 0 ){
 	global $ninja_forms_fields, $ninja_forms_loading, $ninja_forms_processing;
 
-	$field_results = ninja_forms_get_fields_by_form_id($form_id);
+	$field_results = ninja_forms_get_fields_by_form_id($form_id, 'default_order', $parent);
 	$field_results = apply_filters('ninja_forms_display_fields_array', $field_results, $form_id);
 
 	if ( is_array ( $field_results ) AND !empty ( $field_results ) ) {
@@ -278,13 +278,17 @@ function ninja_forms_get_field_class( $field_id ) {
 		$address_class = 'address state';
 	}
 
- 	if ( isset ( $field_data['user_zip'] ) and $field_data['user_zip'] == 1 ) {
-    	$address_class = 'address zip';
-    }
+	if ( isset ( $field_data['user_zip'] ) and $field_data['user_zip'] == 1 ) {
+		$address_class = 'address zip';
+	}
 
-    if ( '_country' == $field_row['type'] ) {
-    	$address_class = 'address country';
-    }
+	if ( '_country' == $field_row['type'] ) {
+		$address_class = 'address country';
+	}
+
+	if ( '_fieldset' == $field_row['type'] ) {
+		$address_class = 'fieldset_wrapper';
+	}
 
 	if($req_class != ''){
 		$field_class .= " ".$req_class;

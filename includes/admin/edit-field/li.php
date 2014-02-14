@@ -102,6 +102,7 @@ function ninja_forms_edit_field_output_li( $field_id ) {
 			}
 ?>
 			<li id="ninja_forms_field_<?php echo $field_id;?>" class="<?php echo join( ' ', $field_class );?>">
+				<div>
 				<input type="hidden" id="ninja_forms_field_<?php echo $field_id;?>_conditional_value_type" value="<?php echo $conditional_value_type;?>">
 				<input type="hidden" id="ninja_forms_field_<?php echo $field_id;?>_fav_id" name="" class="ninja-forms-field-fav-id" value="<?php echo $fav_id;?>">
 				<dl class="menu-item-bar">
@@ -218,10 +219,23 @@ function ninja_forms_edit_field_close_li( $field_id ) {
 	$field_type = $field_row['type'];
 
 	if ( isset( $ninja_forms_fields[$field_type]['use_li'] ) and $ninja_forms_fields[$field_type]['use_li'] ) {
-
 		do_action( 'ninja_forms_edit_field_before_closing_li', $field_id );
 ?>
 			</div><!-- .menu-item-settings-->
+		</div>
+			<?php
+
+				$form = ninja_forms_get_form_by_field_id( $field_id );
+				$children = ninja_forms_get_fields_by_form_id( $form['id'], 'default_order', $field_id );
+
+				if( is_array( $children ) AND !empty( $children ) ){
+					echo '<ul>';
+					foreach( $children as $child ){
+						ninja_forms_edit_field( $child['id'] );
+					}
+					echo '</ul>';
+				}
+			?>
 		</li>
 		<?php
 	}

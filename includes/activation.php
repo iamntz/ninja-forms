@@ -126,13 +126,15 @@ function ninja_forms_activation(){
 		$sql = 'INSERT INTO `'.NINJA_FORMS_FAV_FIELDS_TABLE_NAME.'` (`id`, `row_type`, `type`, `order`, `data`, `name`) VALUES
 		(4, 0, \'_submit\', 0, \'a:4:{s:5:\"label\";s:6:\"Submit\";s:5:\"class\";s:0:\"\";s:9:\"show_help\";s:1:\"0\";s:9:\"help_text\";s:0:\"\";}\', \'Submit\');';
 		$wpdb->query($sql);
-	}
+
+}
 
 	$sql = "CREATE TABLE IF NOT EXISTS ".NINJA_FORMS_FIELDS_TABLE_NAME." (
 	  `id` int(11) NOT NULL AUTO_INCREMENT,
 	  `form_id` int(11) NOT NULL,
 	  `type` varchar(255) CHARACTER SET utf8 NOT NULL,
 	  `order` int(11) NOT NULL,
+	  `parent` int(11) NOT NULL,
 	  `data` longtext CHARACTER SET utf8 NOT NULL,
 	  `fav_id` int(11) DEFAULT NULL,
 	  `def_id` int(11) DEFAULT NULL,
@@ -153,7 +155,6 @@ function ninja_forms_activation(){
 	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;";
 
 	dbDelta($sql);
-
 	if( version_compare( $current_version, '2.0' , '<' ) ){
 		if( isset( $plugin_settings['upload_dir'] ) ){
 			$base_upload_dir = $plugin_settings['upload_dir'];
