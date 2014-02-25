@@ -125,17 +125,17 @@ jQuery(document).ready(function(jQuery) {
 	jQuery(".ninja-forms-form").each(function(){
 		var form_id = this.id.replace("ninja_forms_form_", "");
 		var settings = window['ninja_forms_form_' + form_id + '_settings'];
-		ajax = settings.ajax
+		ajax = settings.ajax;
 		if(ajax == 1){
 			var options = {
-            beforeSerialize: function($form, add_product_form_options) {
-            	if ( typeof tinyMCE !== 'undefined' ) {
-            		tinyMCE.triggerSave();
-            	}
-            },
-			beforeSubmit:  ninja_forms_before_submit,
-			success:       ninja_forms_response,
-			dataType: 'json'
+				beforeSerialize: function($form, add_product_form_options) {
+					if( typeof tinyMCE != 'undefined' && typeof tinyMCE.triggerSave != 'undefined' ){
+						tinyMCE.triggerSave();
+					}
+				},
+				beforeSubmit:  ninja_forms_before_submit,
+				success:       ninja_forms_response,
+				dataType: 'json'
 			};
 			jQuery(this).ajaxForm(options);
 
