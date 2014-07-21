@@ -49,7 +49,9 @@ jQuery(document).ready(function(jQuery) {
 
 	if( jQuery.fn.datepicker ){
 		jQuery(".ninja-forms-datepicker").datepicker({
-			dateFormat: ninja_forms_settings.date_format
+			dateFormat: ninja_forms_settings.date_format,
+			changeMonth: true,
+      changeYear: true
 		});
 	}
 
