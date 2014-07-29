@@ -51,7 +51,8 @@ jQuery(document).ready(function(jQuery) {
 		jQuery(".ninja-forms-datepicker").datepicker({
 			dateFormat: ninja_forms_settings.date_format,
 			changeMonth: true,
-      changeYear: true
+      changeYear: true,
+      yearRange : '-94:-14'
 		});
 	}
 
