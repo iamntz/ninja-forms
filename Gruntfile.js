@@ -60,7 +60,7 @@ module.exports = function(grunt) {
     },
 
 
-    uglify: extend(files_to_uglify, { options : { sourceMap: function( path ){ return path + 'map'; } }}),
+    uglify: extend(files_to_uglify, {}),
     clean: { build: ["js/min"] },
     watch: files_to_watch
   });
