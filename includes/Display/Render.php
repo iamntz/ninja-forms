@@ -145,6 +145,25 @@ final class NF_Display_Render
         }
     }
 
+    protected static function parse_currency_markers( $price )
+    {
+        // TODO: Does the currency marker need to stripped here?
+        $price = str_replace( array( '$', '£', '€' ), '', $price);
+        $price = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $price);
+        $price = number_format($price, 2);
+
+        return $price;
+    }
+
+    protected static function get_shipping_cost( $shipping_cost )
+    {
+        return self::parse_currency_markers($shipping_cost);
+    }
+
+    protected static function get_product_price( $product_price )
+    {
+        return self::parse_currency_markers($product_price);
+    }
 
 
 
@@ -220,17 +239,13 @@ final class NF_Display_Render
                     $settings['value'] = self::get_default_value( $settings, $field_type );
                 }
 
+
+
                 // TODO: Find a better way to do this.
                 if ('shipping' == $settings['type']) {
-                    // TODO: Does the currency marker need to stripped here?
-                    $settings['shipping_cost'] = str_replace( array( '$', '£', '€' ), '', $settings['shipping_cost']);
-                    $settings['shipping_cost'] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $settings['shipping_cost']);
-                    $settings['shipping_cost'] = number_format($settings['shipping_cost'], 2);
+                    $settings['shipping_cost'] = self::get_shipping_cost( $settings['$shipping_cost'] );
                 } elseif ('product' == $settings['type']) {
-                    // TODO: Does the currency marker need to stripped here?
-                    $settings['product_price'] = str_replace( array( '$', '£', '€' ), '', $settings['product_price']);
-                    $settings['product_price'] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $settings['product_price']);
-                    $settings['product_price'] = number_format($settings['product_price'], 2);
+                    $settings['product_price'] = self::get_product_price( $settings['product_price'] );
                 } elseif ('total' == $settings['type'] && isset($settings['value'])) {
                     $settings['value'] = number_format($settings['value'], 2);
                 }
