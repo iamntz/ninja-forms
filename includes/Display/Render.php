@@ -51,14 +51,18 @@ final class NF_Display_Render
     public static function form_has_max_submission( $form )
     {
         if( $form->get_setting( 'sub_limit_number' ) ){
-            // $subs = Ninja_Forms()->form( $form_id )->get_subs();
-            // TODO: Optimize Query
             global $wpdb;
-            $count = 0;
-            $subs = $wpdb->get_results( "SELECT post_id FROM wp_postmeta WHERE `meta_key` = '_form_id' AND `meta_value` = $form_id" );
-            foreach( $subs as $sub ){
-                if( 'publish' == get_post_status( $sub->post_id ) ) $count++;
-            }
+
+            $prepared = $wpdb->prepare( "SELECT COUNT(*) as total, post_id, ID
+                FROM {$wpdb->prefix}postmeta meta,
+                  {$wpdb->prefix}posts posts
+                 WHERE
+                 `post_id` = `ID` AND
+                 `post_status` = 'publish' AND
+                 `meta_key` = '_form_id' AND
+                 `meta_value` = %d", $form->get_id() );
+
+            $count =  $wpdb->get_var($prepared);
 
             if( $count >= $form->get_setting( 'sub_limit_number' ) ) {
                 echo $form->get_setting( 'sub_limit_msg' );
