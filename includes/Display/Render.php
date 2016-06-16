@@ -26,12 +26,15 @@ final class NF_Display_Render
 
     protected static $use_test_values = FALSE;
 
-    public static function localize( $form_id )
+    private static function user_can_display_test_values()
     {
-        $capability = apply_filters( 'ninja_forms_display_test_values_capabilities', 'read' );
-        if( isset( $_GET[ 'ninja_forms_test_values' ] ) && current_user_can( $capability ) ){
-            self::$use_test_values = TRUE;
-        }
+        $capability = apply_filters( 'ninja_forms_display_test_values_capabilities', 'read' ) ;
+        return isset( $_GET[ 'ninja_forms_test_values' ] ) && current_user_can( $capability );
+    }
+
+    public static function render( $form_id )
+    {
+        self::$use_test_values =  self::user_can_display_test_values() ;
 
         if( ! has_action( 'wp_footer', 'NF_Display_Render::output_templates', 9999 ) ){
             add_action( 'wp_footer', 'NF_Display_Render::output_templates', 9999 );
@@ -208,14 +211,17 @@ final class NF_Display_Render
 
         <?php
         self::enqueue_scripts( $form_id );
+
+    }
+
+    public static function localize( $form_id )
+    {
+        self::render( $form_id );
     }
 
     public static function localize_preview( $form_id )
     {
-        $capability = apply_filters( 'ninja_forms_display_test_values_capabilities', 'read' );
-        if( isset( $_GET[ 'ninja_forms_test_values' ] ) && current_user_can( $capability ) ){
-            self::$use_test_values = TRUE;
-        }
+        self::$use_test_values = self::user_can_display_test_values() ;
 
         add_action( 'wp_footer', 'NF_Display_Render::output_templates', 9999 );
 
