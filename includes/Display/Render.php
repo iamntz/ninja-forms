@@ -88,7 +88,7 @@ final class NF_Display_Render
         $form->update_setting( 'afterForm', $after_form );
     }
 
-    protected static function update_field_siblings( $field, $sibling )
+    protected static function get_display_siblings_field_filter( $field, $sibling )
     {
         // ninja_forms_display_before_field_type_
         // ninja_forms_display_before_field_key_
@@ -213,8 +213,8 @@ final class NF_Display_Render
                  * and return the contents through the filter. Also display a PHP Notice for a deprecate filter.
                  */
 
-                $field->update_setting( 'beforeField', self::update_field_siblings($field, 'before') );
-                $field->update_setting( 'afterField', self::update_field_siblings($field, 'after') );
+                $field->update_setting( 'beforeField', self::get_display_siblings_field_filter($field, 'before') );
+                $field->update_setting( 'afterField', self::get_display_siblings_field_filter($field, 'after') );
 
                 $templates = $field_class->get_templates();
 
