@@ -26,13 +26,13 @@ final class NF_Display_Render
 
     protected static $use_test_values = FALSE;
 
-    private static function user_can_display_test_values()
+    protected static function user_can_display_test_values()
     {
         $capability = apply_filters( 'ninja_forms_display_test_values_capabilities', 'read' ) ;
         return isset( $_GET[ 'ninja_forms_test_values' ] ) && current_user_can( $capability );
     }
 
-    private static function form_is_locked( $form )
+    protected static function form_is_locked( $form )
     {
         if ( $form->get_setting( 'lock' ) ) {
             echo __( 'This form is not available.', 'ninja-forms' );
@@ -40,7 +40,7 @@ final class NF_Display_Render
         }
     }
 
-    private static function form_not_available_for_guests( $form )
+    protected static function form_not_available_for_guests( $form )
     {
         if( $form->get_setting( 'logged_in' ) && ! is_user_logged_in() ){
             echo $form->get_setting( 'not_logged_in_msg' );
@@ -48,7 +48,7 @@ final class NF_Display_Render
         }
     }
 
-    private static function form_has_max_submission( $form )
+    protected static function form_has_max_submission( $form )
     {
         if( $form->get_setting( 'sub_limit_number' ) ){
             global $wpdb;
@@ -71,7 +71,7 @@ final class NF_Display_Render
         }
     }
 
-    private static function update_settings_filters( $form )
+    protected static function update_settings_filters( $form )
     {
         $form_id = $form->get_id();
 
@@ -88,7 +88,7 @@ final class NF_Display_Render
         $form->update_setting( 'afterForm', $after_form );
     }
 
-    private static function update_field_siblings( $field, $sibling )
+    protected static function update_field_siblings( $field, $sibling )
     {
         // ninja_forms_display_before_field_type_
         // ninja_forms_display_before_field_key_
@@ -100,9 +100,22 @@ final class NF_Display_Render
         return $display_before;
     }
 
-    public static function has_default_label_position( $settings )
+    protected static function has_default_label_position( $settings )
     {
         return ! isset( $settings[ 'label_pos' ] ) || 'default' == $settings[ 'label_pos' ];
+    }
+
+    public static function get_parsed_field_settings( $setting )
+    {
+        return is_numeric($setting) ? floatval($setting) : $setting;
+    }
+
+    protected static function get_field_settings( $field )
+    {
+        $settings = $field->get_settings();
+        $settings = array_map('self::get_parsed_field_settings', $settings);
+
+        return $settings;
     }
 
 
@@ -164,15 +177,8 @@ final class NF_Display_Render
                     $templates = array($templates);
                 }
 
-                foreach ($templates as $template) {
-                    self::load_template('fields-' . $template);
-                }
-
-                $settings = $field->get_settings();
-
-                foreach ($settings as $key => $setting) {
-                    if (is_numeric($setting)) $settings[$key] = floatval($setting);
-                }
+                self::load_templates( $templates );
+                $settings = self::get_field_settings( $field );
 
                 if( self::has_default_label_position( $settings ) ){
                     $settings[ 'label_pos' ] = $form->get_setting( 'default_label_pos' );
@@ -494,6 +500,13 @@ final class NF_Display_Render
         <?php
         */
         do_action( 'nf_display_enqueue_scripts' );
+    }
+
+    protected static function load_templates( $templates )
+    {
+        foreach ($templates as $template) {
+            self::load_template('fields-' . $template);
+        }
     }
 
     protected static function load_template( $file_name = '' )
