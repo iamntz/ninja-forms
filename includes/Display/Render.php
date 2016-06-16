@@ -48,7 +48,7 @@ final class NF_Display_Render
         }
     }
 
-    public static function form_has_max_submission( $form )
+    private static function form_has_max_submission( $form )
     {
         if( $form->get_setting( 'sub_limit_number' ) ){
             global $wpdb;
@@ -71,6 +71,23 @@ final class NF_Display_Render
         }
     }
 
+    private static function update_settings_filters( $form )
+    {
+        $form_id = $form->get_id();
+
+        $before_form = apply_filters( 'ninja_forms_display_before_form', '', $form_id );
+        $form->update_setting( 'beforeForm', $before_form );
+
+        $before_fields = apply_filters( 'ninja_forms_display_before_fields', '', $form_id );
+        $form->update_setting( 'beforeFields', $before_fields );
+
+        $after_fields = apply_filters( 'ninja_forms_display_after_fields', '', $form_id );
+        $form->update_setting( 'afterFields', $after_fields );
+
+        $after_form = apply_filters( 'ninja_forms_display_after_form', '', $form_id );
+        $form->update_setting( 'afterForm', $after_form );
+    }
+
 
 
 
@@ -87,17 +104,7 @@ final class NF_Display_Render
             return;
         }
 
-        $before_form = apply_filters( 'ninja_forms_display_before_form', '', $form_id );
-        $form->update_setting( 'beforeForm', $before_form );
-
-        $before_fields = apply_filters( 'ninja_forms_display_before_fields', '', $form_id );
-        $form->update_setting( 'beforeFields', $before_fields );
-
-        $after_fields = apply_filters( 'ninja_forms_display_after_fields', '', $form_id );
-        $form->update_setting( 'afterFields', $after_fields );
-
-        $after_form = apply_filters( 'ninja_forms_display_after_form', '', $form_id );
-        $form->update_setting( 'afterForm', $after_form );
+        self::update_settings_filters( $form );
 
         $form_fields = Ninja_Forms()->form( $form_id )->get_fields();
 
