@@ -88,6 +88,23 @@ final class NF_Display_Render
         $form->update_setting( 'afterForm', $after_form );
     }
 
+    private static function update_field_siblings( $field, $sibling )
+    {
+        // ninja_forms_display_before_field_type_
+        // ninja_forms_display_before_field_key_
+        // ninja_forms_display_after_field_type_
+        // ninja_forms_display_after_field_key_
+        $display_before = apply_filters( "ninja_forms_display_{$sibling}_field_type_" . $field->get_setting( 'type' ), '' );
+        $display_before = apply_filters( "ninja_forms_display_{$sibling}_field_key_" . $field->get_setting( 'key' ), $display_before );
+
+        return $display_before;
+    }
+
+    public static function has_default_label_position( $settings )
+    {
+        return ! isset( $settings[ 'label_pos' ] ) || 'default' == $settings[ 'label_pos' ];
+    }
+
 
 
 
@@ -133,16 +150,13 @@ final class NF_Display_Render
                 $field->update_setting('id', $field->get_id());
 
                 /*
-                 * TODO: For backwards compatibility, run the original action, get contents from the output buffer, and return the contents through the filter. Also display a PHP Notice for a deprecate filter.
+                 * TODO: For backwards compatibility, run the original action, get contents from the output buffer,
+                 * and return the contents through the filter. Also display a PHP Notice for a deprecate filter.
                  */
 
-                $display_before = apply_filters( 'ninja_forms_display_before_field_type_' . $field->get_setting( 'type' ), '' );
-                $display_before = apply_filters( 'ninja_forms_display_before_field_key_' . $field->get_setting( 'key' ), $display_before );
-                $field->update_setting( 'beforeField', $display_before );
 
-                $display_after = apply_filters( 'ninja_forms_display_after_field_type_' . $field->get_setting( 'type' ), '' );
-                $display_after = apply_filters( 'ninja_forms_display_after_field_key_' . $field->get_setting( 'key' ), $display_after );
-                $field->update_setting( 'afterField', $display_after );
+                $field->update_setting( 'beforeField', self::update_field_siblings($field, 'before') );
+                $field->update_setting( 'afterField', self::update_field_siblings($field, 'after') );
 
                 $templates = $field_class->get_templates();
 
@@ -160,7 +174,7 @@ final class NF_Display_Render
                     if (is_numeric($setting)) $settings[$key] = floatval($setting);
                 }
 
-                if( ! isset( $settings[ 'label_pos' ] ) || 'default' == $settings[ 'label_pos' ] ){
+                if( self::has_default_label_position( $settings ) ){
                     $settings[ 'label_pos' ] = $form->get_setting( 'default_label_pos' );
                 }
 
