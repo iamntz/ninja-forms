@@ -32,28 +32,26 @@ final class NF_Display_Render
         return isset( $_GET[ 'ninja_forms_test_values' ] ) && current_user_can( $capability );
     }
 
-    public static function render( $form_id )
+    private static function form_is_locked( $form )
     {
-        self::$use_test_values =  self::user_can_display_test_values() ;
-
-        if( ! has_action( 'wp_footer', 'NF_Display_Render::output_templates', 9999 ) ){
-            add_action( 'wp_footer', 'NF_Display_Render::output_templates', 9999 );
-        }
-        $form = Ninja_Forms()->form( $form_id )->get();
-
-        if( $form->get_setting( 'lock' ) ){
+        if ( $form->get_setting( 'lock' ) ) {
             echo __( 'This form is not available.', 'ninja-forms' );
-            return;
+            return true;
         }
+    }
 
+    private static function form_not_available_for_guests( $form )
+    {
         if( $form->get_setting( 'logged_in' ) && ! is_user_logged_in() ){
             echo $form->get_setting( 'not_logged_in_msg' );
-            return;
+            return true;
         }
+    }
 
+    public static function form_has_max_submission( $form )
+    {
         if( $form->get_setting( 'sub_limit_number' ) ){
-            $subs = Ninja_Forms()->form( $form_id )->get_subs();
-
+            // $subs = Ninja_Forms()->form( $form_id )->get_subs();
             // TODO: Optimize Query
             global $wpdb;
             $count = 0;
@@ -64,8 +62,25 @@ final class NF_Display_Render
 
             if( $count >= $form->get_setting( 'sub_limit_number' ) ) {
                 echo $form->get_setting( 'sub_limit_msg' );
-                return;
+                return true;
             }
+        }
+    }
+
+
+
+
+    public static function render( $form_id )
+    {
+        self::$use_test_values =  self::user_can_display_test_values() ;
+
+        if( ! has_action( 'wp_footer', 'NF_Display_Render::output_templates', 9999 ) ){
+            add_action( 'wp_footer', 'NF_Display_Render::output_templates', 9999 );
+        }
+        $form = Ninja_Forms()->form( $form_id )->get();
+
+        if (self::form_is_locked( $form ) || self::form_not_available_for_guests( $form ) || self::form_has_max_submission( $form )) {
+            return;
         }
 
         $before_form = apply_filters( 'ninja_forms_display_before_form', '', $form_id );
