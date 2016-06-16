@@ -118,6 +118,33 @@ final class NF_Display_Render
         return $settings;
     }
 
+    protected static function is_list_item( $settings )
+    {
+        return 'list' == $settings[ 'parentType' ] && isset( $settings[ 'options' ] ) && is_array( $settings[ 'options' ] );
+    }
+
+    protected static function parse_list_item( $settings, $field_type )
+    {
+        $settings[ 'options' ] = apply_filters( 'ninja_forms_render_options', $settings[ 'options' ], $settings );
+        $settings[ 'options' ] = apply_filters( 'ninja_forms_render_options_' . $field_type, $settings[ 'options' ], $settings );
+
+        return $settings[ 'options' ];
+    }
+
+    protected static function get_default_value( $settings, $field_type )
+    {
+        $default_value = apply_filters('ninja_forms_render_default_value', $settings['default'], $field_type, $settings);
+
+        $default_value = preg_replace( '/{.*}/', '', $default_value );
+
+        if ($default_value) {
+            ob_start();
+            do_shortcode( $default_value );
+
+            return ob_get_clean();
+        }
+    }
+
 
 
 
@@ -167,7 +194,6 @@ final class NF_Display_Render
                  * and return the contents through the filter. Also display a PHP Notice for a deprecate filter.
                  */
 
-
                 $field->update_setting( 'beforeField', self::update_field_siblings($field, 'before') );
                 $field->update_setting( 'afterField', self::update_field_siblings($field, 'after') );
 
@@ -186,27 +212,12 @@ final class NF_Display_Render
 
                 $settings[ 'parentType' ] = $field_class->get_parent_type();
 
-                if( 'list' == $settings[ 'parentType' ] && isset( $settings[ 'options' ] ) && is_array( $settings[ 'options' ] ) ){
-                    $settings[ 'options' ] = apply_filters( 'ninja_forms_render_options', $settings[ 'options' ], $settings );
-                    $settings[ 'options' ] = apply_filters( 'ninja_forms_render_options_' . $field_type, $settings[ 'options' ], $settings );
+                if(self::is_list_item( $settings )){
+                    $settings[ 'options' ] = self::parse_list_item( $settings, $field_type );
                 }
 
                 if (isset($settings['default'])) {
-                    $default_value = apply_filters('ninja_forms_render_default_value', $settings['default'], $field_type, $settings);
-
-                    $default_value = preg_replace( '/{.*}/', '', $default_value );
-
-                    if ($default_value) {
-                        $settings['value'] = $default_value;
-
-                        ob_start();
-                        do_shortcode( $settings['value'] );
-                        $ob = ob_get_clean();
-
-                        if( $ob ){
-                            $settings['value'] = $ob;
-                        }
-                    }
+                    $settings['value'] = self::get_default_value( $settings, $field_type );
                 }
 
                 // TODO: Find a better way to do this.
